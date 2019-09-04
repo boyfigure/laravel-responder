@@ -54,21 +54,6 @@ class SuccessResponseBuilder extends ResponseBuilder
     }
 
     /**
-     * Set resource data for the transformation.
-     *
-     * @param  mixed                                                          $data
-     * @param  \Flugg\Responder\Transformers\Transformer|callable|string|null $transformer
-     * @param  string|null                                                    $resourceKey
-     * @return self
-     */
-    public function transform($data = null, $transformer = null, string $resourceKey = null): SuccessResponseBuilder
-    {
-        $this->transformBuilder->resource($data, $transformer, $resourceKey);
-
-        return $this;
-    }
-
-    /**
      * Dynamically send calls to the transform builder.
      *
      * @param  string $name

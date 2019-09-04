@@ -67,7 +67,6 @@ class ResponderServiceProvider extends BaseServiceProvider
         $this->registerTransformerBindings();
         $this->registerResourceBindings();
         $this->registerPaginationBindings();
-        $this->registerTransformationBindings();
         $this->registerServiceBindings();
     }
 
@@ -207,28 +206,6 @@ class ResponderServiceProvider extends BaseServiceProvider
     }
 
     /**
-     * Register transformation bindings.
-     *
-     * @return void
-     */
-    protected function registerTransformationBindings()
-    {
-        $this->app->bind(TransformFactoryContract::class, function ($app) {
-            return $app->make(FractalTransformFactory::class);
-        });
-
-        $this->app->bind(TransformBuilder::class, function ($app) {
-            $request = $this->app->make(Request::class);
-            $relations = $request->input($this->app->config['responder.load_relations_parameter'], []);
-            $fieldsets = $request->input($app->config['responder.filter_fields_parameter'], []);
-
-            return (new TransformBuilder($app->make(ResourceFactoryContract::class), $app->make(TransformFactoryContract::class), $app->make(PaginatorFactoryContract::class)))->serializer($app->make(SerializerAbstract::class))
-                ->with(is_string($relations) ? explode(',', $relations) : $relations)
-                ->only($fieldsets);
-        });
-    }
-
-    /**
      * Register service bindings.
      *
      * @return void
@@ -254,7 +231,6 @@ class ResponderServiceProvider extends BaseServiceProvider
         }
 
         $this->mergeConfigFrom(__DIR__ . '/../config/responder.php', 'responder');
-        $this->commands(MakeTransformer::class);
     }
 
     /**
